@@ -1,43 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Slack Emoji Art Generator (Ultimate)</title>
     <style>
         :root {
-                --grid-rows: 8; 
-                --grid-cols: 12;
-                --cell-dimension: 30px;
-                --empty-color: #f8f8f8;
-                --grid-border-color: #ccc;
-                /* Define colors for visual drawing feedback (7 Slots) */
-                --color-1: #E01E5A; /* Red */
-                --color-2: #36C5F0; /* Blue */
-                --color-3: #9F401A; /* Brown */
-                --color-4: #2EBD59; /* Green */
-                --color-5: #6E3F9B; /* Purple */
-                --color-6: #F4D338; /* Yellow */
-                --color-7: #F26723; /* Orange */
-            }
+            --grid-rows: 8;
+            --grid-cols: 12;
+            --cell-dimension: 30px;
+            --empty-color: #f8f8f8;
+            --grid-border-color: #ccc;
+            /* Define colors for visual drawing feedback (7 Slots) */
+            --color-1: #E01E5A;
+            /* Red */
+            --color-2: #36C5F0;
+            /* Blue */
+            --color-3: #9F401A;
+            /* Brown */
+            --color-4: #2EBD59;
+            /* Green */
+            --color-5: #6E3F9B;
+            /* Purple */
+            --color-6: #F4D338;
+            /* Yellow */
+            --color-7: #F26723;
+            /* Orange */
+            --color-8: #000000;
+            /* Black */
+        }
 
-            /* ... other CSS ... */
+        /* ... other CSS ... */
 
-            /* Color Swatch Indicators */
-            .swatch {
-                width: 15px;
-                height: 15px;
-                border-radius: 50%;
-                border: 1px solid #333;
-            }
-            
-            .swatch-1 { background-color: var(--color-1); }
-            .swatch-2 { background-color: var(--color-2); }
-            .swatch-3 { background-color: var(--color-3); }
-            .swatch-4 { background-color: var(--color-4); }
-            .swatch-5 { background-color: var(--color-5); }
-            .swatch-6 { background-color: var(--color-6); }
-            .swatch-7 { background-color: var(--color-7); }
+        /* Color Swatch Indicators */
+        .swatch {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            border: 1px solid #333;
+        }
+
+        .swatch-1 {
+            background-color: var(--color-1);
+        }
+
+        .swatch-2 {
+            background-color: var(--color-2);
+        }
+
+        .swatch-3 {
+            background-color: var(--color-3);
+        }
+
+        .swatch-4 {
+            background-color: var(--color-4);
+        }
+
+        .swatch-5 {
+            background-color: var(--color-5);
+        }
+
+        .swatch-6 {
+            background-color: var(--color-6);
+        }
+
+        .swatch-7 {
+            background-color: var(--color-7);
+        }
+
+        .swatch-8 {
+            background-color: var(--color-8);
+        }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -47,7 +81,7 @@
         }
 
         .container {
-            max-width: 1000px; 
+            max-width: 1000px;
             margin: 0 auto;
             border: 1px solid #ddd;
             padding: 20px;
@@ -64,25 +98,25 @@
         .controls {
             display: flex;
             flex-wrap: wrap;
-            gap: 15px 25px; 
+            gap: 15px 25px;
             margin-bottom: 20px;
             padding-bottom: 20px;
             border-bottom: 1px solid #eee;
-            align-items: flex-start; 
+            align-items: flex-start;
         }
 
         .control-group {
             display: flex;
             flex-direction: column;
         }
-        
+
         .emoji-inputs {
             display: flex;
             flex-direction: column;
             gap: 10px;
             padding: 5px 0;
         }
-        
+
         .emoji-input-row {
             display: flex;
             align-items: center;
@@ -95,19 +129,20 @@
             font-size: 0.9em;
         }
 
-        input[type="text"], input[type="number"] {
+        input[type="text"],
+        input[type="number"] {
             padding: 8px;
             border: 1px solid #ccc;
             border-radius: 4px;
             font-size: 1em;
-            width: 100px; 
+            width: 100px;
             text-align: center;
         }
-        
+
         .size-inputs input[type="number"] {
-            width: 60px; 
+            width: 60px;
         }
-        
+
         /* Disable manual editing of size inputs when drag resize is active */
         .controls.resizing input[type="number"] {
             background-color: #eee;
@@ -116,7 +151,7 @@
 
         button {
             padding: 10px 15px;
-            background-color: #2eb67d; 
+            background-color: #2eb67d;
             color: white;
             border: none;
             border-radius: 4px;
@@ -129,7 +164,7 @@
         button:hover {
             background-color: #25a46e;
         }
-        
+
         /* Tool Selector Buttons */
         #tool-selector {
             display: flex;
@@ -137,7 +172,7 @@
             gap: 8px;
             min-width: 150px;
         }
-        
+
         .tool-button {
             display: flex;
             align-items: center;
@@ -149,23 +184,28 @@
             padding: 8px;
             box-sizing: border-box;
         }
-        
+
         .tool-button.active {
-            border-color: var(--color-1); 
+            border-color: var(--color-1);
             background-color: #e6f7f0;
             font-weight: bold;
         }
-        
-      
+
+        .tool-button.select-mode {
+            border-color: #4A154B;
+            background-color: #f0e6f7;
+        }
+
+
 
 
         /* --- Grid & Resizer --- */
         #grid-wrapper {
-            position: relative; 
+            position: relative;
             max-width: fit-content;
             margin-bottom: 20px;
             /* Added margin to prevent handles from overlapping other content */
-            padding: 15px; 
+            padding: 15px;
         }
 
         #grid-container {
@@ -187,31 +227,84 @@
         }
 
         /* Dynamic classes for visual selection */
-        .cell[data-color-slot="1"] { background-color: var(--color-1); }
-        .cell[data-color-slot="2"] { background-color: var(--color-2); }
-        .cell[data-color-slot="3"] { background-color: var(--color-3); }
-        .cell[data-color-slot="4"] { background-color: var(--color-4); }
-        .cell[data-color-slot="5"] { background-color: var(--color-5); }
-        .cell[data-color-slot="6"] { background-color: var(--color-6); }
-        .cell[data-color-slot="7"] { background-color: var(--color-7); }
-        
+        .cell[data-color-slot="1"] {
+            background-color: var(--color-1);
+        }
+
+        .cell[data-color-slot="2"] {
+            background-color: var(--color-2);
+        }
+
+        .cell[data-color-slot="3"] {
+            background-color: var(--color-3);
+        }
+
+        .cell[data-color-slot="4"] {
+            background-color: var(--color-4);
+        }
+
+        .cell[data-color-slot="5"] {
+            background-color: var(--color-5);
+        }
+
+        .cell[data-color-slot="6"] {
+            background-color: var(--color-6);
+        }
+
+        .cell[data-color-slot="7"] {
+            background-color: var(--color-7);
+        }
+
+        .cell[data-color-slot="8"] {
+            background-color: var(--color-8);
+        }
+
+        /* Selection Mode Styles */
+        .cell.selected {
+            outline: 2px solid #4A154B;
+            outline-offset: -2px;
+            opacity: 0.8;
+        }
+
+        #selection-rectangle {
+            position: absolute;
+            border: 2px dashed #4A154B;
+            background-color: rgba(74, 21, 75, 0.1);
+            pointer-events: none;
+            display: none;
+            z-index: 5;
+        }
+
+        .cell.clipboard-preview {
+            outline: 2px dashed #36C5F0;
+            outline-offset: -2px;
+            opacity: 0.7;
+            cursor: grab;
+        }
+
+        .cell.clipboard-preview.dragging {
+            cursor: grabbing;
+        }
+
         /* Resize Handles */
         .resize-handle {
             position: absolute;
             width: 20px;
             height: 20px;
-            background-color: #36c5f0; 
+            background-color: #36c5f0;
             border-radius: 4px;
             z-index: 10;
         }
-        
-        #resize-br { /* Bottom-Right */
-            bottom: 0px; 
+
+        #resize-br {
+            /* Bottom-Right */
+            bottom: 0px;
             right: 0px;
-            cursor: nwse-resize; 
+            cursor: nwse-resize;
         }
 
-        #resize-tl { /* Top-Left */
+        #resize-tl {
+            /* Top-Left */
             top: 0px;
             left: 0px;
             cursor: nwse-resize;
@@ -229,25 +322,28 @@
             border: 1px solid #ccc;
             border-radius: 4px;
             font-family: monospace;
-            white-space: pre; 
+            white-space: pre;
             box-sizing: border-box;
         }
 
         .copy-button {
-            background-color: #36c5f0; 
+            background-color: #36c5f0;
             margin-top: 10px;
         }
-        
+
         .clear-button {
-            background-color: #f03636; 
+            background-color: #f03636;
         }
+
         .clear-button:hover {
             background-color: #d82e2e;
         }
 
         .paste-button {
-            background-color: #e0b400; /* Yellowish for paste */
+            background-color: #e0b400;
+            /* Yellowish for paste */
         }
+
         .paste-button:hover {
             background-color: #c79f00;
         }
@@ -257,532 +353,1207 @@
             gap: 10px;
             margin-top: 20px;
         }
+
+        .undo-button {
+            background-color: #ECB22E;
+        }
+
+        .undo-button:hover:not(:disabled) {
+            background-color: #D4A029;
+        }
+
+        .undo-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .redo-button {
+            background-color: #36C5F0;
+        }
+
+        .redo-button:hover:not(:disabled) {
+            background-color: #2BA8D4;
+        }
+
+        .redo-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
     </style>
 </head>
+
 <body>
 
-<div class="container">
-    <h1>🎨 Ultimate Slack Emoji Art Generator</h1>
-    <p>Select an **Emoji Slot** to draw. Drag the **blue corner handles** to resize the canvas.</p>
+    <div class="container-fluid">
+        <h1>🎨 Ultimate Slack Emoji Art Generator</h1>
+        <p>Select an **Emoji Slot** to draw. Drag the **blue corner handles** to resize the canvas. Use
+            <strong>Ctrl+Z</strong> to undo and <strong>Ctrl+Shift+Z</strong> or <strong>Ctrl+Y</strong> to redo.
+        </p>
 
-    <div class="controls">
-        <div class="control-group size-inputs">
-            <label for="row-size">Rows</label>
-            <input type="number" id="row-size" value="8" min="3" max="50" onchange="generateGrid()">
-            <label for="col-size" style="margin-top: 5px;">Columns</label>
-            <input type="number" id="col-size" value="12" min="3" max="50" onchange="generateGrid()">
+
+        <div class="controls">
+            <div class="control-group size-inputs">
+                <label for="row-size">Rows</label>
+                <input type="number" id="row-size" value="8" min="3" max="50" onchange="generateGrid()">
+                <label for="col-size" style="margin-top: 5px;">Columns</label>
+                <input type="number" id="col-size" value="12" min="3" max="50" onchange="generateGrid()">
+            </div>
+
+            <div class="control-group">
+                <label>Emoji Codes</label>
+                <div class="emoji-inputs">
+                    <div class="emoji-input-row">
+                        <span class="swatch swatch-1"></span>
+                        <input type="text" id="filled-emoji-1" value=":large_red_square:" placeholder=":emoji_1: (Red)">
+                    </div>
+                    <div class="emoji-input-row">
+                        <span class="swatch swatch-2"></span>
+                        <input type="text" id="filled-emoji-2" value=":large_blue_square:"
+                            placeholder=":emoji_2: (Blue)">
+                    </div>
+                    <div class="emoji-input-row">
+                        <span class="swatch swatch-3"></span>
+                        <input type="text" id="filled-emoji-3" value=":large_brown_square:"
+                            placeholder=":emoji_3: (Brown)">
+                    </div>
+                    <div class="emoji-input-row">
+                        <span class="swatch swatch-4"></span>
+                        <input type="text" id="filled-emoji-4" value=":large_green_square:"
+                            placeholder=":emoji_4: (Green)">
+                    </div>
+                    <div class="emoji-input-row">
+                        <span class="swatch swatch-5"></span>
+                        <input type="text" id="filled-emoji-5" value=":large_purple_square:"
+                            placeholder=":emoji_5: (Purple)">
+                    </div>
+                    <div class="emoji-input-row">
+                        <span class="swatch swatch-6"></span>
+                        <input type="text" id="filled-emoji-6" value=":large_yellow_square:"
+                            placeholder=":emoji_6: (Yellow)">
+                    </div>
+                    <div class="emoji-input-row">
+                        <span class="swatch swatch-7"></span>
+                        <input type="text" id="filled-emoji-7" value=":large_orange_square:"
+                            placeholder=":emoji_7: (Orange)">
+                    </div>
+                    <div class="emoji-input-row">
+                        <span class="swatch swatch-8"></span>
+                        <input type="text" id="filled-emoji-8" value=":black_square:" placeholder=":emoji_8: (Black)">
+                    </div>
+                    <div class="emoji-input-row">
+                        <label style="margin: 0; font-weight: normal; min-width: 50px;">Empty:</label>
+                        <input type="text" id="empty-emoji" value=":empty:" placeholder=":blank_emoji:">
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-group" id="tool-selector">
+                <label>Drawing Tool</label>
+                <button class="tool-button active" data-tool="1">
+                    <span class="swatch swatch-1"></span> Draw Slot 1 (Red)
+                </button>
+                <button class="tool-button" data-tool="2">
+                    <span class="swatch swatch-2"></span> Draw Slot 2 (Blue)
+                </button>
+                <button class="tool-button" data-tool="3">
+                    <span class="swatch swatch-3"></span> Draw Slot 3 (Brown)
+                </button>
+                <button class="tool-button" data-tool="4">
+                    <span class="swatch swatch-4"></span> Draw Slot 4 (Green)
+                </button>
+                <button class="tool-button" data-tool="5">
+                    <span class="swatch swatch-5"></span> Draw Slot 5 (Purple)
+                </button>
+                <button class="tool-button" data-tool="6">
+                    <span class="swatch swatch-6"></span> Draw Slot 6 (Yellow)
+                </button>
+                <button class="tool-button" data-tool="7">
+                    <span class="swatch swatch-7"></span> Draw Slot 7 (Orange)
+                </button>
+                <button class="tool-button" data-tool="8">
+                    <span class="swatch swatch-8"></span> Draw Slot 8 (Black)
+                </button>
+                <button class="tool-button" id="select-mode-button" data-tool="select">
+                    📦 Select Mode
+                </button>
+                <!-- <button class="tool-button" data-tool="0"> -->
+                <!-- <span class="swatch" style="background-color: var(--empty-color);"></span> Eraser (Empty) -->
+                <!-- </button> -->
+            </div>
         </div>
 
-     <div class="control-group">
-        <label>Emoji Codes</label>
-        <div class="emoji-inputs">
-            <div class="emoji-input-row">
-                <span class="swatch swatch-1"></span>
-                <input type="text" id="filled-emoji-1" value=":large_red_square:" placeholder=":emoji_1: (Red)">
+        <div id="emoji-picker" style="display:none; position:absolute; background:#fff; border:1px solid #ccc; padding:10px; 
+            width:300px; height:350px; box-shadow:0 2px 6px rgba(0,0,0,0.2); z-index:1000;">
+            <input type="text" id="emoji-search" placeholder="Search emojis..."
+                style="width:100%; padding:6px; margin-bottom:8px; border:1px solid #ccc; border-radius:4px;">
+            <div id="emoji-list" style="height:280px; overflow:auto;"></div>
+        </div>
+
+        <!-- Selection controls (shown when in select mode with active selection) -->
+        <div id="selection-controls"
+            style="display:none; margin-top: 10px; padding: 10px; background: #f0e6f7; border-radius: 4px; border: 1px solid #4A154B;">
+            <strong>Selection Actions:</strong>
+            <button onclick="copySelection()" style="margin-left: 10px;">Copy (Ctrl+C)</button>
+            <button onclick="cutSelection()" style="margin-left: 5px;">Cut (Ctrl+X)</button>
+            <button onclick="pasteClipboard()" id="paste-button" style="margin-left: 5px;" disabled>Paste
+                (Ctrl+V)</button>
+            <button onclick="clearSelection()" style="margin-left: 5px;">Clear Selection (Esc)</button>
+        </div>
+
+
+        <div id="grid-wrapper">
+            <div id="grid-container">
             </div>
-            <div class="emoji-input-row">
-                <span class="swatch swatch-2"></span>
-                <input type="text" id="filled-emoji-2" value=":large_blue_square:" placeholder=":emoji_2: (Blue)">
-            </div>
-            <div class="emoji-input-row">
-                <span class="swatch swatch-3"></span>
-                <input type="text" id="filled-emoji-3" value=":large_brown_square:" placeholder=":emoji_3: (Brown)">
-            </div>
-            <div class="emoji-input-row">
-                <span class="swatch swatch-4"></span>
-                <input type="text" id="filled-emoji-4" value=":large_green_square:" placeholder=":emoji_4: (Green)">
-            </div>
-            <div class="emoji-input-row">
-                <span class="swatch swatch-5"></span>
-                <input type="text" id="filled-emoji-5" value=":large_purple_square:" placeholder=":emoji_5: (Purple)">
-            </div>
-            <div class="emoji-input-row">
-                <span class="swatch swatch-6"></span>
-                <input type="text" id="filled-emoji-6" value=":large_yellow_square:" placeholder=":emoji_6: (Yellow)">
-            </div>
-            <div class="emoji-input-row">
-                <span class="swatch swatch-7"></span>
-                <input type="text" id="filled-emoji-7" value=":large_orange_square:" placeholder=":emoji_7: (Orange)">
-            </div>
-            <div class="emoji-input-row">
-                <label style="margin: 0; font-weight: normal; min-width: 50px;">Empty:</label>
-                <input type="text" id="empty-emoji" value=":white_square:" placeholder=":blank_emoji:">
-            </div>
-        </div>  
+            <div id="selection-rectangle"></div>
+            <div id="resize-br" class="resize-handle"></div>
+            <div id="resize-tl" class="resize-handle"></div>
+        </div>
+
+        <div class="action-buttons">
+            <button onclick="convertToSlack()">Generate Slack Message</button>
+            <!-- <button onclick="pasteToGrid()" class="paste-button">Paste Slack Message to Grid</button> -->
+            <button onclick="undo()" class="undo-button" id="undo-button" disabled>Undo</button>
+            <button onclick="redo()" class="redo-button" id="redo-button" disabled>Redo</button>
+            <button onclick="clearGrid()" class="clear-button">Clear Canvas</button>
+        </div>
+
+        <div id="output-area">
+            <label for="slack-message-output">Slack Message Output (Copy & Paste this!)</label>
+            <textarea id="slack-message-output" readonly></textarea>
+            <button class="copy-button" onclick="copyToClipboard()">Copy to Clipboard</button>
+        </div>
     </div>
 
-    <div class="control-group" id="tool-selector">
-        <label>Drawing Tool</label>
-        <button class="tool-button active" data-tool="1">
-            <span class="swatch swatch-1"></span> Draw Slot 1 (Red)
-        </button>
-        <button class="tool-button" data-tool="2">
-            <span class="swatch swatch-2"></span> Draw Slot 2 (Blue)
-        </button>
-        <button class="tool-button" data-tool="3">
-            <span class="swatch swatch-3"></span> Draw Slot 3 (Brown)
-        </button>
-        <button class="tool-button" data-tool="4">
-            <span class="swatch swatch-4"></span> Draw Slot 4 (Green)
-        </button>
-        <button class="tool-button" data-tool="5">
-            <span class="swatch swatch-5"></span> Draw Slot 5 (Purple)
-        </button>
-        <button class="tool-button" data-tool="6">
-            <span class="swatch swatch-6"></span> Draw Slot 6 (Yellow)
-        </button>
-        <button class="tool-button" data-tool="7">
-            <span class="swatch swatch-7"></span> Draw Slot 7 (Orange)
-        </button>
-        <button class="tool-button" data-tool="0">
-            <span class="swatch" style="background-color: var(--empty-color);"></span> Eraser (Empty)
-        </button>
-    </div>
-    </div>
+    <script>
+        let EMOJI_DATA = [];
+        let ALL_EMOJIS = [];
+        let currentTargetInput = null;
 
-    <div id="grid-wrapper">
-        <div id="grid-container">
-            </div>
-        <div id="resize-br" class="resize-handle"></div>
-        <div id="resize-tl" class="resize-handle"></div>
-    </div>
+        // Load both emoji sources
+        Promise.all([
+            fetch("emojis.json").then(res => res.json()).catch(() => []),
+            fetch("original imojies.json").then(res => res.json()).catch(() => [])
+        ]).then(([imageEmojis, textEmojis]) => {
+            EMOJI_DATA = imageEmojis;
 
-    <div class="action-buttons">
-        <button onclick="convertToSlack()">Generate Slack Message</button>
-        <button onclick="pasteToGrid()" class="paste-button">Paste Slack Message to Grid</button>
-        <button onclick="clearGrid()" class="clear-button">Clear Canvas</button>
-    </div>
+            // Combine both sources
+            const imageEmojiCodes = new Set(imageEmojis.map(e => e.slack_code));
 
-    <div id="output-area">
-        <label for="slack-message-output">Slack Message Output (Copy & Paste this!)</label>
-        <textarea id="slack-message-output" readonly></textarea>
-        <button class="copy-button" onclick="copyToClipboard()">Copy to Clipboard</button>
-    </div>
-</div>
+            // Add image-based emojis
+            ALL_EMOJIS = imageEmojis.map(e => ({
+                code: e.slack_code,
+                url: e.url,
+                hasImage: true
+            }));
 
-<script>
-    const gridWrapper = document.getElementById('grid-wrapper');
-    const gridContainer = document.getElementById('grid-container');
-    const resizeHandleBR = document.getElementById('resize-br'); // Bottom-Right
-    const resizeHandleTL = document.getElementById('resize-tl'); // Top-Left
-    const controls = document.querySelector('.controls');
-    const toolSelector = document.getElementById('tool-selector');
+            // Add text-only emojis (those not in image set)
+            textEmojis.forEach(code => {
+                if (!imageEmojiCodes.has(code)) {
+                    ALL_EMOJIS.push({
+                        code: code,
+                        url: null,
+                        hasImage: false
+                    });
+                }
+            });
 
-    const rowSizeInput = document.getElementById('row-size');
-    const colSizeInput = document.getElementById('col-size');
-    const outputTextArea = document.getElementById('slack-message-output');
-
-    // Core dimensions
-    let R_current = 8; 
-    let C_current = 12;
-    const CELL_DIMENSION = 30; 
-    const GAP_SIZE = 1; // From CSS gap property
-
-    // Drawing state
-    let isDrawing = false; 
-    let activeTool = "1"; // Currently selected tool/color slot (1-4 for drawing, 0 for erase)
-    let paintMode = true; 
-
-    // Resizing state
-    let isResizing = false;
-    let resizeHandleMode = ''; // 'br' for bottom-right, 'tl' for top-left
-    let gridInitialRect; // Stores bounding rect of grid at start of resize
-    let mouseInitialX = 0;
-    let mouseInitialY = 0;
-
-    // Initial grid generation
-    generateGrid();
-    
-    // --- Tool Selector Logic ---
-    toolSelector.addEventListener('click', (e) => {
-        const button = e.target.closest('.tool-button');
-        if (button) {
-            activeTool = button.dataset.tool;
-            document.querySelectorAll('.tool-button').forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
-        }
-    });
-
-    /* ----------------------------------
-     * 1. Drawing Logic (Drag-to-Draw)
-     * ---------------------------------- */
-
-    gridContainer.addEventListener('mousedown', (e) => {
-        if (isResizing) return;
-        if (e.target.classList.contains('cell')) {
-            isDrawing = true;
-            const cellColorSlot = e.target.getAttribute('data-color-slot');
-            if (activeTool === "0") {
-                paintMode = false; // Always erase if eraser is active
-            } else {
-                // If cell is currently empty OR has a different color, we draw. Otherwise, we erase.
-                paintMode = (cellColorSlot !== activeTool);
-            }
-            drawCell(e.target);
-        }
-    });
-
-    gridContainer.addEventListener('mouseover', (e) => {
-        if (isDrawing && e.target.classList.contains('cell')) {
-            drawCell(e.target);
-        }
-    });
-
-    document.addEventListener('mouseup', () => {
-        isDrawing = false;
-    });
-
-    function drawCell(cell) {
-        if (activeTool === "0" || !paintMode) {
-            cell.removeAttribute('data-color-slot');
-        } else {
-            cell.setAttribute('data-color-slot', activeTool);
-        }
-    }
-
-    /* ----------------------------------
-     * 2. Resizing Logic (Drag Handles)
-     * ---------------------------------- */
-
-    resizeHandleBR.addEventListener('mousedown', (e) => startResize(e, 'br'));
-    resizeHandleTL.addEventListener('mousedown', (e) => startResize(e, 'tl'));
-
-    function startResize(e, mode) {
-        e.preventDefault(); 
-        isResizing = true;
-        resizeHandleMode = mode;
-        
-        gridInitialRect = gridContainer.getBoundingClientRect(); // Get current size and position
-        mouseInitialX = e.clientX;
-        mouseInitialY = e.clientY;
-
-        controls.classList.add('resizing');
-        document.addEventListener('mousemove', handleResizeMouseMove);
-        document.addEventListener('mouseup', handleResizeMouseUp);
-    }
-
-    function handleResizeMouseMove(e) {
-        if (!isResizing) return;
-
-        let newCols = C_current;
-        let newRows = R_current;
-
-        if (resizeHandleMode === 'br') {
-            // Bottom-Right: Expand/contract from current top-left
-            const dx = e.clientX - mouseInitialX;
-            const dy = e.clientY - mouseInitialY;
-
-            // Calculate new grid dimensions based on drag distance
-            const targetWidth = gridInitialRect.width + dx;
-            const targetHeight = gridInitialRect.height + dy;
-            
-            newCols = Math.max(3, Math.round(targetWidth / (CELL_DIMENSION + GAP_SIZE))); 
-            newRows = Math.max(3, Math.round(targetHeight / (CELL_DIMENSION + GAP_SIZE)));
-        } 
-        else if (resizeHandleMode === 'tl') {
-            // Top-Left: Expand/contract towards current bottom-right
-            const dx = mouseInitialX - e.clientX; // Inverted for top-left
-            const dy = mouseInitialY - e.clientY; // Inverted for top-left
-            
-            // For top-left, we want to shift the grid and resize.
-            // The effective drag distance tells us how many cells to add/remove.
-            const deltaCols = Math.round(dx / (CELL_DIMENSION + GAP_SIZE));
-            const deltaRows = Math.round(dy / (CELL_DIMENSION + GAP_SIZE));
-
-            newCols = Math.max(3, C_current + deltaCols);
-            newRows = Math.max(3, R_current + deltaRows);
-
-            // To avoid rapid resizing/flickering, only update if significant change
-            if (Math.abs(deltaCols) < 1 && Math.abs(deltaRows) < 1) return;
-        }
-
-        // Only trigger grid regeneration if dimensions actually change
-        if (newRows !== R_current || newCols !== C_current) {
-            rowSizeInput.value = newRows;
-            colSizeInput.value = newCols;
-            generateGrid(); // This will preserve the drawing and update R_current, C_current
-            
-            // After resizing, update mouse initial for continuous drag, especially for TL
-            if (resizeHandleMode === 'tl') {
-                mouseInitialX = e.clientX;
-                mouseInitialY = e.clientY;
-            }
-        }
-    }
-
-    function handleResizeMouseUp() {
-        if (!isResizing) return;
-        isResizing = false;
-        resizeHandleMode = '';
-        controls.classList.remove('resizing');
-        document.removeEventListener('mousemove', handleResizeMouseMove);
-        document.removeEventListener('mouseup', handleResizeMouseUp);
-    }
-
-    /* ----------------------------------
-     * 3. Grid Management and Conversion
-     * ---------------------------------- */
-    
-    /**
-     * Clears all selections from the grid cells.
-     */
-    function clearGrid() {
-        if (!confirm("Are you sure you want to clear the entire canvas?")) {
-            return;
-        }
-        const cells = Array.from(gridContainer.children);
-        cells.forEach(cell => {
-            cell.removeAttribute('data-color-slot');
+            console.log(`Loaded ${ALL_EMOJIS.length} total emojis (${imageEmojis.length} with images, ${ALL_EMOJIS.length - imageEmojis.length} text-only)`);
         });
-    }
 
-    /**
-     * Reads the state of the current grid (before resizing).
-     * @returns {Array<Array<string>>} A 2D array representing the color slot (1-4, or empty string).
-     */
-    function getOldGridState() {
-        const state = [];
-        const cells = Array.from(gridContainer.children);
+        document.querySelectorAll('#filled-emoji-1, #filled-emoji-2, #filled-emoji-3, #filled-emoji-4, #filled-emoji-5, #filled-emoji-6, #filled-emoji-7, #filled-emoji-8, #empty-emoji')
+            .forEach(input => {
+                input.addEventListener('click', (e) => openEmojiPicker(e.target));
+            });
 
-        if (cells.length === 0) return [];
+        function openEmojiPicker(targetInput) {
+            currentTargetInput = targetInput;
+            const picker = document.getElementById("emoji-picker");
+            const searchInput = document.getElementById("emoji-search");
 
-        for (let r = 0; r < R_current; r++) {
-            state[r] = [];
-            for (let c = 0; c < C_current; c++) {
-                const index = r * C_current + c;
-                if (index < cells.length) {
-                    state[r][c] = cells[index].getAttribute('data-color-slot') || "";
+            // Position popup under the input
+            const rect = targetInput.getBoundingClientRect();
+            picker.style.left = rect.left + "px";
+            picker.style.top = rect.bottom + window.scrollY + "px";
+
+            // Clear search
+            searchInput.value = "";
+
+            // Display all emojis initially
+            displayEmojis(ALL_EMOJIS);
+
+            picker.style.display = "block";
+            searchInput.focus();
+        }
+
+        function displayEmojis(emojis) {
+            const emojiList = document.getElementById("emoji-list");
+
+            if (emojis.length === 0) {
+                emojiList.innerHTML = '<div style="padding:20px; text-align:center; color:#666;">No emojis found</div>';
+                return;
+            }
+
+            emojiList.innerHTML = emojis.map(e => {
+                if (e.hasImage) {
+                    // Display with image
+                    return `<img src="${e.url}" 
+                        data-code="${e.code}"
+                        title=":${e.code}:"
+                        style="width:32px; height:32px; margin:4px; cursor:pointer; border-radius:4px;"
+                        onmouseover="this.style.background='#f0f0f0'"
+                        onmouseout="this.style.background='transparent'">`;
                 } else {
-                    state[r][c] = "";
+                    // Display as text button
+                    return `<span class="emoji-text-item" 
+                        data-code="${e.code}"
+                        title=":${e.code}:"
+                        style="display:inline-block; padding:6px 8px; margin:2px; cursor:pointer; 
+                               border:1px solid #ddd; border-radius:4px; font-size:11px; 
+                               background:#f9f9f9; color:#333;"
+                        onmouseover="this.style.background='#e0e0e0'"
+                        onmouseout="this.style.background='#f9f9f9'">:${e.code}:</span>`;
                 }
-            }
-        }
-        return state;
-    }
+            }).join("");
 
-    /**
-     * Generates the visual grid based on the row and column inputs, preserving the old drawing.
-     * This function is now responsible for handling grid shifts when resizing from top-left.
-     */
-    function generateGrid() {
-        const R_new = parseInt(rowSizeInput.value);
-        const C_new = parseInt(colSizeInput.value);
-        
-        const oldState = getOldGridState();
-
-        if (R_new < 3 || C_new < 3 || R_new > 50 || C_new > 50 || isNaN(R_new) || isNaN(C_new)) {
-            rowSizeInput.value = R_current;
-            colSizeInput.value = C_current;
-            return;
+            // Click handler for emoji selection
+            emojiList.querySelectorAll("img, .emoji-text-item").forEach(item => {
+                item.onclick = () => {
+                    currentTargetInput.value = item.dataset.code;
+                    document.getElementById("emoji-picker").style.display = "none";
+                };
+            });
         }
 
-        // Calculate shift for old drawing relative to new grid
-        let rowShift = 0;
-        let colShift = 0;
+        // Search functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById("emoji-search");
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    const query = e.target.value.toLowerCase().trim();
 
-        if (resizeHandleMode === 'tl') {
-            // When resizing from top-left, the grid "moves" relative to its old position.
-            // We need to calculate how much it grew/shrunk from the top/left.
-            // The number of cells added/removed from the top/left affects the offset.
-            rowShift = R_new - R_current;
-            colShift = C_new - C_current;
-        }
-
-        R_current = R_new; 
-        C_current = C_new;
-
-        document.documentElement.style.setProperty('--grid-rows', R_new);
-        document.documentElement.style.setProperty('--grid-cols', C_new);
-
-        gridContainer.innerHTML = '';
-        
-        for (let r = 0; r < R_new; r++) {
-            for (let c = 0; c < C_new; c++) {
-                const cell = document.createElement('div');
-                cell.classList.add('cell');
-                
-                // Map old cell coordinates to new cell coordinates
-                const oldR = r - rowShift;
-                const oldC = c - colShift;
-
-                let savedColorSlot = "";
-                if (oldR >= 0 && oldR < oldState.length && oldC >= 0 && oldC < oldState[oldR].length) {
-                    savedColorSlot = oldState[oldR][oldC];
-                }
-                
-                if (savedColorSlot) {
-                    cell.setAttribute('data-color-slot', savedColorSlot);
-                }
-
-                gridContainer.appendChild(cell);
-            }
-        }
-    }
-
-    /**
-     * Converts the current grid drawing into a Slack-formatted message string.
-     */
-function convertToSlack() {
-        // Map the data-color-slot attribute to the actual emoji code input
-        const emojiMap = {};
-        for (let i = 1; i <= 7; i++) {
-            emojiMap[String(i)] = document.getElementById(`filled-emoji-${i}`).value.trim();
-        }
-        
-        const emptyEmoji = document.getElementById('empty-emoji').value.trim();
-        
-        for (const key in emojiMap) {
-            if (emojiMap[key] && (!emojiMap[key].startsWith(':') || !emojiMap[key].endsWith(':'))) {
-                 alert(`Please ensure Emoji Slot ${key} has a valid code (e.g., :emoji_name:).`);
-                 return;
-            }
-        }
-        if (!emptyEmoji || !emptyEmoji.startsWith(':') || !emptyEmoji.endsWith(':')) {
-            alert("Please ensure the Empty Emoji has a valid code (e.g., :white_square:).");
-            return;
-        }
-
-        let slackMessage = '';
-        const cells = Array.from(gridContainer.children);
-        
-        for (let r = 0; r < R_current; r++) {
-            for (let c = 0; c < C_current; c++) {
-                const index = r * C_current + c; 
-                const cell = cells[index];
-                
-                const colorSlot = cell.getAttribute('data-color-slot');
-
-                if (colorSlot && emojiMap[colorSlot]) {
-                    slackMessage += emojiMap[colorSlot];
-                } else {
-                    slackMessage += emptyEmoji;
-                }
-            }
-            slackMessage += '\n';
-        }
-
-        outputTextArea.value = slackMessage.trimEnd(); 
-    }
-
-    /**
-     * Parses the text from the output textarea and draws it onto the grid.
-     */
-    function pasteToGrid() {
-        // ... (preamble of the function) ...
-
-        const emojiMapReverse = {}; // To map emoji codes back to color slots
-        emojiMapReverse[document.getElementById('empty-emoji').value.trim()] = ""; // Empty string for empty slot
-
-        // Populate reverse map for filled emojis (updated to 7 slots)
-        for (let i = 1; i <= 7; i++) {
-            const emojiCode = document.getElementById(`filled-emoji-${i}`).value.trim();
-            if (emojiCode && emojiCode.startsWith(':') && emojiCode.endsWith(':')) {
-                emojiMapReverse[emojiCode] = String(i);
-            }
-        }
-        
-        const lines = textToParse.split('\n').filter(line => line.trim() !== '');
-
-        if (lines.length === 0) {
-            alert("No valid emoji lines found in the pasted text.");
-            return;
-        }
-
-        // Determine the dimensions of the pasted art
-        const pastedRows = lines.length;
-        // The first line's length will be a multiple of the shortest emoji code length (e.g. 5 for :a:)
-        // We'll need to smartly parse this by finding the length of the shortest valid emoji.
-        // For simplicity, let's assume all emojis have a consistent length OR parse by emoji code.
-
-        // Get emoji lengths for smarter parsing
-        const allEmojiCodes = Object.keys(emojiMapReverse);
-        const minEmojiLength = Math.min(...allEmojiCodes.map(code => code.length));
-        
-        let pastedCols = 0;
-        if (lines[0]) {
-            // Attempt to count columns based on a minimum emoji length
-            pastedCols = Math.floor(lines[0].length / minEmojiLength);
-        }
-
-        if (pastedCols === 0) {
-             alert("Could not determine grid columns from pasted text. Please check emoji formats.");
-             return;
-        }
-
-        // Update the grid size inputs and regenerate the grid
-        rowSizeInput.value = pastedRows;
-        colSizeInput.value = pastedCols;
-        generateGrid(); // This clears and redraws to the new size
-
-        // Now, populate the grid with the parsed emojis
-        const cells = Array.from(gridContainer.children);
-        for (let r = 0; r < pastedRows; r++) {
-            const line = lines[r];
-            for (let c = 0; c < pastedCols; c++) {
-                const index = r * pastedCols + c;
-                const cell = cells[index];
-
-                let matchedEmojiCode = "";
-                let bestMatchLength = 0;
-
-                // Try to match longest emoji codes first to prevent partial matches
-                for (const emojiCode of allEmojiCodes.sort((a,b) => b.length - a.length)) {
-                    if (line.substring(c * emojiCode.length, (c * emojiCode.length) + emojiCode.length) === emojiCode) {
-                        matchedEmojiCode = emojiCode;
-                        bestMatchLength = emojiCode.length;
-                        break; // Found the best match for this position
+                    if (query === "") {
+                        displayEmojis(ALL_EMOJIS);
+                    } else {
+                        const filtered = ALL_EMOJIS.filter(emoji =>
+                            emoji.code.toLowerCase().includes(query)
+                        );
+                        displayEmojis(filtered);
                     }
-                }
-                
-                // Fallback: if no explicit emoji code matches for the full block,
-                // and if the line length allows, try to match using the minEmojiLength as a block
-                // This is less robust but handles cases where the user's input might be slightly off.
-                if (!matchedEmojiCode && (c * minEmojiLength + minEmojiLength) <= line.length) {
-                    const genericBlock = line.substring(c * minEmojiLength, c * minEmojiLength + minEmojiLength);
-                    if (emojiMapReverse[genericBlock] !== undefined) {
-                         matchedEmojiCode = genericBlock;
-                    }
-                }
-
-                if (matchedEmojiCode && emojiMapReverse[matchedEmojiCode] !== undefined) {
-                    const colorSlot = emojiMapReverse[matchedEmojiCode];
-                    if (colorSlot) { // If it's a non-empty emoji
-                        cell.setAttribute('data-color-slot', colorSlot);
-                    } else { // It's the empty emoji
-                        cell.removeAttribute('data-color-slot');
-                    }
-                } else {
-                    cell.removeAttribute('data-color-slot'); // Default to empty if no match
-                }
-            }
-        }
-        alert("Slack message parsed and drawn onto the grid!");
-    }
-
-
-    /**
-     * Copies the content of the output textarea to the clipboard.
-     */
-    function copyToClipboard() {
-        const output = document.getElementById('slack-message-output');
-        output.select();
-        output.setSelectionRange(0, 99999); 
-
-        try {
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(output.value).then(() => {
-                    alert('Slack message copied to clipboard!');
                 });
-            } else {
-                 document.execCommand('copy');
-                 alert('Failed to copy. Please manually select and copy the text.');
+
+                // Prevent search input from closing picker
+                searchInput.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                });
             }
-        } catch (err) {
-            console.error('Could not copy text: ', err);
-            alert('Failed to copy. Please manually select and copy the text.');
+        });
+
+        //click outside to close picker
+        document.addEventListener("click", function (e) {
+            const picker = document.getElementById("emoji-picker");
+            if (!picker.contains(e.target) && !e.target.matches("input[id^='filled-emoji'], #empty-emoji")) {
+                picker.style.display = "none";
+            }
+        });
+
+        const gridWrapper = document.getElementById('grid-wrapper');
+        const gridContainer = document.getElementById('grid-container');
+        const resizeHandleBR = document.getElementById('resize-br'); // Bottom-Right
+        const resizeHandleTL = document.getElementById('resize-tl'); // Top-Left
+        const controls = document.querySelector('.controls');
+        const toolSelector = document.getElementById('tool-selector');
+
+        const rowSizeInput = document.getElementById('row-size');
+        const colSizeInput = document.getElementById('col-size');
+        const outputTextArea = document.getElementById('slack-message-output');
+
+        // Core dimensions
+        let R_current = 8;
+        let C_current = 12;
+        const CELL_DIMENSION = 30;
+        const GAP_SIZE = 1; // From CSS gap property
+
+        // Drawing state
+        let isDrawing = false;
+        let activeTool = "1"; // Currently selected tool/color slot (1-4 for drawing, 0 for erase)
+        let paintMode = true;
+
+        // Resizing state
+        let isResizing = false;
+        let resizeHandleMode = ''; // 'br' for bottom-right, 'tl' for top-left
+        let gridInitialRect; // Stores bounding rect of grid at start of resize
+        let mouseInitialX = 0;
+        let mouseInitialY = 0;
+
+        // Undo history
+        let undoHistory = []; // Stack to store previous grid states
+        let redoHistory = []; // Stack to store states for redo
+        const MAX_UNDO_HISTORY = 5; // Limit history to prevent memory issues
+        let currentDrawingState = null; // Stores state before current drawing operation
+
+        // Selection mode state
+        let isSelectMode = false;
+        let isSelecting = false;
+        let selectionStart = null; // {row, col}
+        let selectionEnd = null; // {row, col}
+        let selectedCells = []; // Array of cell indices
+        let clipboard = null; // {data: [[colorSlot, ...], ...], rows, cols}
+        let isPasteMode = false;
+        let pastePreviewCells = [];
+        let isDraggingPaste = false;
+        let pasteOffset = { row: 0, col: 0 };
+
+        // Initial grid generation
+        generateGrid();
+
+        // --- Tool Selector Logic ---
+        toolSelector.addEventListener('click', (e) => {
+            const button = e.target.closest('.tool-button');
+            if (button) {
+                const tool = button.dataset.tool;
+
+                if (tool === 'select') {
+                    // Toggle select mode
+                    isSelectMode = !isSelectMode;
+                    document.querySelectorAll('.tool-button').forEach(btn => {
+                        btn.classList.remove('active');
+                        btn.classList.remove('select-mode');
+                    });
+
+                    if (isSelectMode) {
+                        button.classList.add('select-mode');
+                        gridContainer.style.cursor = 'crosshair';
+                    } else {
+                        clearSelection();
+                        gridContainer.style.cursor = 'crosshair';
+                        // Activate first drawing tool
+                        activeTool = "1";
+                        document.querySelector('[data-tool="1"]').classList.add('active');
+                    }
+                } else {
+                    // Regular drawing tool
+                    isSelectMode = false;
+                    clearSelection();
+                    activeTool = tool;
+                    document.querySelectorAll('.tool-button').forEach(btn => {
+                        btn.classList.remove('active');
+                        btn.classList.remove('select-mode');
+                    });
+                    button.classList.add('active');
+                    gridContainer.style.cursor = 'crosshair';
+                }
+            }
+        });
+
+        // --- Keyboard Shortcuts ---
+        document.addEventListener('keydown', (e) => {
+            // Check if Ctrl (or Cmd on Mac) is pressed
+            const isCtrlOrCmd = e.ctrlKey || e.metaKey;
+
+            // Ctrl+Z or Cmd+Z: Undo
+            if (isCtrlOrCmd && e.key === 'z' && !e.shiftKey) {
+                e.preventDefault();
+                undo();
+            }
+            // Ctrl+Shift+Z or Cmd+Shift+Z: Redo
+            else if (isCtrlOrCmd && e.key === 'z' && e.shiftKey) {
+                e.preventDefault();
+                redo();
+            }
+            // Ctrl+Y or Cmd+Y: Redo (alternative)
+            else if (isCtrlOrCmd && e.key === 'y') {
+                e.preventDefault();
+                redo();
+            }
+            // Ctrl+C: Copy selection
+            else if (isCtrlOrCmd && e.key === 'c' && isSelectMode && selectedCells.length > 0) {
+                e.preventDefault();
+                copySelection();
+            }
+            // Ctrl+X: Cut selection
+            else if (isCtrlOrCmd && e.key === 'x' && isSelectMode && selectedCells.length > 0) {
+                e.preventDefault();
+                cutSelection();
+            }
+            // Ctrl+V: Paste
+            else if (isCtrlOrCmd && e.key === 'v' && isSelectMode && clipboard !== null) {
+                e.preventDefault();
+                pasteClipboard();
+            }
+            // Escape: Clear selection
+            else if (e.key === 'Escape') {
+                clearSelection();
+            }
+        });
+
+        /* ----------------------------------
+         * 1. Drawing Logic (Drag-to-Draw)
+         * ---------------------------------- */
+
+        gridContainer.addEventListener('mousedown', (e) => {
+            if (isResizing) return;
+            if (!e.target.classList.contains('cell')) return;
+
+            if (isSelectMode) {
+                // Selection mode logic
+                if (isPasteMode && e.target.classList.contains('clipboard-preview')) {
+                    // Start dragging the paste preview
+                    isDraggingPaste = true;
+                    const cellIndex = Array.from(gridContainer.children).indexOf(e.target);
+                    const startRow = Math.floor(cellIndex / C_current);
+                    const startCol = cellIndex % C_current;
+                    pasteOffset = { row: startRow, col: startCol };
+
+                    // Add dragging class for cursor change
+                    document.querySelectorAll('.cell.clipboard-preview').forEach(cell => {
+                        cell.classList.add('dragging');
+                    });
+                } else {
+                    // Start new selection
+                    clearSelection();
+                    isSelecting = true;
+                    const cellIndex = Array.from(gridContainer.children).indexOf(e.target);
+                    const row = Math.floor(cellIndex / C_current);
+                    const col = cellIndex % C_current;
+                    selectionStart = { row, col };
+                    selectionEnd = { row, col };
+                    updateSelectionVisual();
+                }
+            } else {
+                // Drawing mode logic
+                isDrawing = true;
+
+                // Save the current grid state before starting to draw
+                currentDrawingState = captureGridState();
+
+                const cellColorSlot = e.target.getAttribute('data-color-slot');
+                if (activeTool === "0") {
+                    paintMode = false; // Always erase if eraser is active
+                } else {
+                    // If cell is currently empty OR has a different color, we draw. Otherwise, we erase.
+                    paintMode = (cellColorSlot !== activeTool);
+                }
+                drawCell(e.target);
+            }
+        });
+
+        gridContainer.addEventListener('mouseover', (e) => {
+            if (!e.target.classList.contains('cell')) return;
+
+            if (isSelecting) {
+                // Update selection end point
+                const cellIndex = Array.from(gridContainer.children).indexOf(e.target);
+                const row = Math.floor(cellIndex / C_current);
+                const col = cellIndex % C_current;
+                selectionEnd = { row, col };
+                updateSelectionVisual();
+            } else if (isDraggingPaste) {
+                // Update paste preview position
+                const cellIndex = Array.from(gridContainer.children).indexOf(e.target);
+                const row = Math.floor(cellIndex / C_current);
+                const col = cellIndex % C_current;
+                pasteOffset = { row, col };
+                updatePastePreview();
+            } else if (isDrawing) {
+                // Drawing mode
+                drawCell(e.target);
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (isDrawing && currentDrawingState !== null) {
+                // Push the state before drawing to the undo history
+                pushToUndoHistory(currentDrawingState);
+                currentDrawingState = null;
+            }
+
+            if (isSelecting) {
+                isSelecting = false;
+                // Show selection controls if we have a selection
+                if (selectedCells.length > 0) {
+                    document.getElementById('selection-controls').style.display = 'block';
+                }
+            }
+
+            if (isDraggingPaste) {
+                // Remove dragging class
+                document.querySelectorAll('.cell.clipboard-preview').forEach(cell => {
+                    cell.classList.remove('dragging');
+                });
+
+                // Finalize paste
+                isDraggingPaste = false;
+                applyPaste();
+            }
+
+            isDrawing = false;
+        });
+
+        function drawCell(cell) {
+            if (activeTool === "0" || !paintMode) {
+                cell.removeAttribute('data-color-slot');
+            } else {
+                cell.setAttribute('data-color-slot', activeTool);
+            }
         }
-    }
-</script>
+
+        /* ----------------------------------
+         * 2. Resizing Logic (Drag Handles)
+         * ---------------------------------- */
+
+        resizeHandleBR.addEventListener('mousedown', (e) => startResize(e, 'br'));
+        resizeHandleTL.addEventListener('mousedown', (e) => startResize(e, 'tl'));
+
+        function startResize(e, mode) {
+            e.preventDefault();
+            isResizing = true;
+            resizeHandleMode = mode;
+
+            gridInitialRect = gridContainer.getBoundingClientRect(); // Get current size and position
+            mouseInitialX = e.clientX;
+            mouseInitialY = e.clientY;
+
+            controls.classList.add('resizing');
+            document.addEventListener('mousemove', handleResizeMouseMove);
+            document.addEventListener('mouseup', handleResizeMouseUp);
+        }
+
+        function handleResizeMouseMove(e) {
+            if (!isResizing) return;
+
+            let newCols = C_current;
+            let newRows = R_current;
+
+            if (resizeHandleMode === 'br') {
+                // Bottom-Right: Expand/contract from current top-left
+                const dx = e.clientX - mouseInitialX;
+                const dy = e.clientY - mouseInitialY;
+
+                // Calculate new grid dimensions based on drag distance
+                const targetWidth = gridInitialRect.width + dx;
+                const targetHeight = gridInitialRect.height + dy;
+
+                newCols = Math.max(3, Math.round(targetWidth / (CELL_DIMENSION + GAP_SIZE)));
+                newRows = Math.max(3, Math.round(targetHeight / (CELL_DIMENSION + GAP_SIZE)));
+            }
+            else if (resizeHandleMode === 'tl') {
+                // Top-Left: Expand/contract towards current bottom-right
+                const dx = mouseInitialX - e.clientX; // Inverted for top-left
+                const dy = mouseInitialY - e.clientY; // Inverted for top-left
+
+                // For top-left, we want to shift the grid and resize.
+                // The effective drag distance tells us how many cells to add/remove.
+                const deltaCols = Math.round(dx / (CELL_DIMENSION + GAP_SIZE));
+                const deltaRows = Math.round(dy / (CELL_DIMENSION + GAP_SIZE));
+
+                newCols = Math.max(3, C_current + deltaCols);
+                newRows = Math.max(3, R_current + deltaRows);
+
+                // To avoid rapid resizing/flickering, only update if significant change
+                if (Math.abs(deltaCols) < 1 && Math.abs(deltaRows) < 1) return;
+            }
+
+            // Only trigger grid regeneration if dimensions actually change
+            if (newRows !== R_current || newCols !== C_current) {
+                rowSizeInput.value = newRows;
+                colSizeInput.value = newCols;
+                generateGrid(); // This will preserve the drawing and update R_current, C_current
+
+                // After resizing, update mouse initial for continuous drag, especially for TL
+                if (resizeHandleMode === 'tl') {
+                    mouseInitialX = e.clientX;
+                    mouseInitialY = e.clientY;
+                }
+            }
+        }
+
+        function handleResizeMouseUp() {
+            if (!isResizing) return;
+            isResizing = false;
+            resizeHandleMode = '';
+            controls.classList.remove('resizing');
+            document.removeEventListener('mousemove', handleResizeMouseMove);
+            document.removeEventListener('mouseup', handleResizeMouseUp);
+        }
+
+        /* ----------------------------------
+         * 3. Grid Management and Conversion
+         * ---------------------------------- */
+
+        /**
+         * Clears all selections from the grid cells.
+         */
+        function clearGrid() {
+            if (!confirm("Are you sure you want to clear the entire canvas?")) {
+                return;
+            }
+
+            // Save state before clearing so it can be undone
+            pushToUndoHistory(captureGridState());
+
+            const cells = Array.from(gridContainer.children);
+            cells.forEach(cell => {
+                cell.removeAttribute('data-color-slot');
+            });
+        }
+
+        /**
+         * Reads the state of the current grid (before resizing).
+         * @returns {Array<Array<string>>} A 2D array representing the color slot (1-4, or empty string).
+         */
+        function getOldGridState() {
+            const state = [];
+            const cells = Array.from(gridContainer.children);
+
+            if (cells.length === 0) return [];
+
+            for (let r = 0; r < R_current; r++) {
+                state[r] = [];
+                for (let c = 0; c < C_current; c++) {
+                    const index = r * C_current + c;
+                    if (index < cells.length) {
+                        state[r][c] = cells[index].getAttribute('data-color-slot') || "";
+                    } else {
+                        state[r][c] = "";
+                    }
+                }
+            }
+            return state;
+        }
+
+        /**
+         * Generates the visual grid based on the row and column inputs, preserving the old drawing.
+         * This function is now responsible for handling grid shifts when resizing from top-left.
+         */
+        function generateGrid() {
+            const R_new = parseInt(rowSizeInput.value);
+            const C_new = parseInt(colSizeInput.value);
+
+            const oldState = getOldGridState();
+
+            if (R_new < 3 || C_new < 3 || R_new > 50 || C_new > 50 || isNaN(R_new) || isNaN(C_new)) {
+                rowSizeInput.value = R_current;
+                colSizeInput.value = C_current;
+                return;
+            }
+
+            // Calculate shift for old drawing relative to new grid
+            let rowShift = 0;
+            let colShift = 0;
+
+            if (resizeHandleMode === 'tl') {
+                // When resizing from top-left, the grid "moves" relative to its old position.
+                // We need to calculate how much it grew/shrunk from the top/left.
+                // The number of cells added/removed from the top/left affects the offset.
+                rowShift = R_new - R_current;
+                colShift = C_new - C_current;
+            }
+
+            R_current = R_new;
+            C_current = C_new;
+
+            document.documentElement.style.setProperty('--grid-rows', R_new);
+            document.documentElement.style.setProperty('--grid-cols', C_new);
+
+            gridContainer.innerHTML = '';
+
+            for (let r = 0; r < R_new; r++) {
+                for (let c = 0; c < C_new; c++) {
+                    const cell = document.createElement('div');
+                    cell.classList.add('cell');
+
+                    // Map old cell coordinates to new cell coordinates
+                    const oldR = r - rowShift;
+                    const oldC = c - colShift;
+
+                    let savedColorSlot = "";
+                    if (oldR >= 0 && oldR < oldState.length && oldC >= 0 && oldC < oldState[oldR].length) {
+                        savedColorSlot = oldState[oldR][oldC];
+                    }
+
+                    if (savedColorSlot) {
+                        cell.setAttribute('data-color-slot', savedColorSlot);
+                    }
+
+                    gridContainer.appendChild(cell);
+                }
+            }
+        }
+
+        /**
+         * Converts the current grid drawing into a Slack-formatted message string.
+         */
+        function convertToSlack() {
+            // Map the data-color-slot attribute to the actual emoji code input
+            const emojiMap = {};
+            for (let i = 1; i <= 8; i++) {
+                emojiMap[String(i)] = document.getElementById(`filled-emoji-${i}`).value.trim();
+            }
+
+            const emptyEmoji = document.getElementById('empty-emoji').value.trim();
+
+            for (const key in emojiMap) {
+                if (emojiMap[key] && (!emojiMap[key].startsWith(':') || !emojiMap[key].endsWith(':'))) {
+                    alert(`Please ensure Emoji Slot ${key} has a valid code (e.g., :emoji_name:).`);
+                    return;
+                }
+            }
+            if (!emptyEmoji || !emptyEmoji.startsWith(':') || !emptyEmoji.endsWith(':')) {
+                alert("Please ensure the Empty Emoji has a valid code (e.g., :empty:).");
+                return;
+            }
+
+            let slackMessage = '';
+            const cells = Array.from(gridContainer.children);
+
+            for (let r = 0; r < R_current; r++) {
+                for (let c = 0; c < C_current; c++) {
+                    const index = r * C_current + c;
+                    const cell = cells[index];
+
+                    const colorSlot = cell.getAttribute('data-color-slot');
+
+                    if (colorSlot && emojiMap[colorSlot]) {
+                        slackMessage += emojiMap[colorSlot];
+                    } else {
+                        slackMessage += emptyEmoji;
+                    }
+                }
+                slackMessage += '\n';
+            }
+
+            outputTextArea.value = slackMessage.trimEnd();
+            copyToClipboard()
+        }
+
+        /**
+         * Parses the text from the output textarea and draws it onto the grid.
+         */
+        function pasteToGrid() {
+            // ... (preamble of the function) ...
+
+            const emojiMapReverse = {}; // To map emoji codes back to color slots
+            emojiMapReverse[document.getElementById('empty-emoji').value.trim()] = ""; // Empty string for empty slot
+
+            // Populate reverse map for filled emojis (updated to 8 slots)
+            for (let i = 1; i <= 8; i++) {
+                const emojiCode = document.getElementById(`filled-emoji-${i}`).value.trim();
+                if (emojiCode && emojiCode.startsWith(':') && emojiCode.endsWith(':')) {
+                    emojiMapReverse[emojiCode] = String(i);
+                }
+            }
+
+            const lines = textToParse.split('\n').filter(line => line.trim() !== '');
+
+            if (lines.length === 0) {
+                alert("No valid emoji lines found in the pasted text.");
+                return;
+            }
+
+            // Determine the dimensions of the pasted art
+            const pastedRows = lines.length;
+            // The first line's length will be a multiple of the shortest emoji code length (e.g. 5 for :a:)
+            // We'll need to smartly parse this by finding the length of the shortest valid emoji.
+            // For simplicity, let's assume all emojis have a consistent length OR parse by emoji code.
+
+            // Get emoji lengths for smarter parsing
+            const allEmojiCodes = Object.keys(emojiMapReverse);
+            const minEmojiLength = Math.min(...allEmojiCodes.map(code => code.length));
+
+            let pastedCols = 0;
+            if (lines[0]) {
+                // Attempt to count columns based on a minimum emoji length
+                pastedCols = Math.floor(lines[0].length / minEmojiLength);
+            }
+
+            if (pastedCols === 0) {
+                alert("Could not determine grid columns from pasted text. Please check emoji formats.");
+                return;
+            }
+
+            // Update the grid size inputs and regenerate the grid
+            rowSizeInput.value = pastedRows;
+            colSizeInput.value = pastedCols;
+            generateGrid(); // This clears and redraws to the new size
+
+            // Now, populate the grid with the parsed emojis
+            const cells = Array.from(gridContainer.children);
+            for (let r = 0; r < pastedRows; r++) {
+                const line = lines[r];
+                for (let c = 0; c < pastedCols; c++) {
+                    const index = r * pastedCols + c;
+                    const cell = cells[index];
+
+                    let matchedEmojiCode = "";
+                    let bestMatchLength = 0;
+
+                    // Try to match longest emoji codes first to prevent partial matches
+                    for (const emojiCode of allEmojiCodes.sort((a, b) => b.length - a.length)) {
+                        if (line.substring(c * emojiCode.length, (c * emojiCode.length) + emojiCode.length) === emojiCode) {
+                            matchedEmojiCode = emojiCode;
+                            bestMatchLength = emojiCode.length;
+                            break; // Found the best match for this position
+                        }
+                    }
+
+                    // Fallback: if no explicit emoji code matches for the full block,
+                    // and if the line length allows, try to match using the minEmojiLength as a block
+                    // This is less robust but handles cases where the user's input might be slightly off.
+                    if (!matchedEmojiCode && (c * minEmojiLength + minEmojiLength) <= line.length) {
+                        const genericBlock = line.substring(c * minEmojiLength, c * minEmojiLength + minEmojiLength);
+                        if (emojiMapReverse[genericBlock] !== undefined) {
+                            matchedEmojiCode = genericBlock;
+                        }
+                    }
+
+                    if (matchedEmojiCode && emojiMapReverse[matchedEmojiCode] !== undefined) {
+                        const colorSlot = emojiMapReverse[matchedEmojiCode];
+                        if (colorSlot) { // If it's a non-empty emoji
+                            cell.setAttribute('data-color-slot', colorSlot);
+                        } else { // It's the empty emoji
+                            cell.removeAttribute('data-color-slot');
+                        }
+                    } else {
+                        cell.removeAttribute('data-color-slot'); // Default to empty if no match
+                    }
+                }
+            }
+            alert("Slack message parsed and drawn onto the grid!");
+        }
+
+
+        /* ----------------------------------
+         * 4. Undo Functionality
+         * ---------------------------------- */
+
+        /**
+         * Captures the current state of the grid including dimensions and cell colors.
+         * @returns {Object} An object containing rows, cols, and cell state data.
+         */
+        function captureGridState() {
+            const cells = Array.from(gridContainer.children);
+            const cellData = cells.map(cell => cell.getAttribute('data-color-slot') || "");
+
+            return {
+                rows: R_current,
+                cols: C_current,
+                cellData: cellData
+            };
+        }
+
+
+        /* ----------------------------------
+         * 4. Selection Mode Functions
+         * ---------------------------------- */
+
+        /**
+         * Updates the visual representation of the current selection.
+         */
+        function updateSelectionVisual() {
+            // Clear previous selection visual
+            document.querySelectorAll('.cell.selected').forEach(cell => {
+                cell.classList.remove('selected');
+            });
+            selectedCells = [];
+
+            if (!selectionStart || !selectionEnd) return;
+
+            // Calculate selection bounds
+            const minRow = Math.min(selectionStart.row, selectionEnd.row);
+            const maxRow = Math.max(selectionStart.row, selectionEnd.row);
+            const minCol = Math.min(selectionStart.col, selectionEnd.col);
+            const maxCol = Math.max(selectionStart.col, selectionEnd.col);
+
+            // Mark selected cells
+            const cells = Array.from(gridContainer.children);
+            for (let r = minRow; r <= maxRow; r++) {
+                for (let c = minCol; c <= maxCol; c++) {
+                    const index = r * C_current + c;
+                    if (index < cells.length) {
+                        cells[index].classList.add('selected');
+                        selectedCells.push(index);
+                    }
+                }
+            }
+        }
+
+        /**
+         * Clears the current selection.
+         */
+        function clearSelection() {
+            document.querySelectorAll('.cell.selected').forEach(cell => {
+                cell.classList.remove('selected');
+            });
+            document.querySelectorAll('.cell.clipboard-preview').forEach(cell => {
+                cell.classList.remove('clipboard-preview');
+            });
+            selectedCells = [];
+            selectionStart = null;
+            selectionEnd = null;
+            isPasteMode = false;
+            pastePreviewCells = [];
+            document.getElementById('selection-controls').style.display = 'none';
+        }
+
+        /**
+         * Copies the selected cells to clipboard.
+         */
+        function copySelection() {
+            if (selectedCells.length === 0) return;
+
+            // Save state for undo
+            pushToUndoHistory(captureGridState());
+
+            const minRow = Math.min(selectionStart.row, selectionEnd.row);
+            const maxRow = Math.max(selectionStart.row, selectionEnd.row);
+            const minCol = Math.min(selectionStart.col, selectionEnd.col);
+            const maxCol = Math.max(selectionStart.col, selectionEnd.col);
+
+            const rows = maxRow - minRow + 1;
+            const cols = maxCol - minCol + 1;
+            const data = [];
+
+            const cells = Array.from(gridContainer.children);
+            for (let r = 0; r < rows; r++) {
+                data[r] = [];
+                for (let c = 0; c < cols; c++) {
+                    const index = (minRow + r) * C_current + (minCol + c);
+                    data[r][c] = cells[index].getAttribute('data-color-slot') || "";
+                }
+            }
+
+            clipboard = { data, rows, cols };
+            document.getElementById('paste-button').disabled = false;
+            alert(`Copied ${rows}x${cols} selection to clipboard!`);
+        }
+
+        /**
+         * Cuts the selected cells to clipboard.
+         */
+        function cutSelection() {
+            if (selectedCells.length === 0) return;
+
+            // Copy first
+            copySelection();
+
+            // Then clear the selected cells
+            const cells = Array.from(gridContainer.children);
+            selectedCells.forEach(index => {
+                cells[index].removeAttribute('data-color-slot');
+            });
+
+            clearSelection();
+        }
+
+        /**
+         * Initiates paste mode with preview.
+         */
+        function pasteClipboard() {
+            if (!clipboard) return;
+
+            isPasteMode = true;
+            pasteOffset = { row: 0, col: 0 };
+            updatePastePreview();
+        }
+
+        /**
+         * Updates the paste preview visual.
+         */
+        function updatePastePreview() {
+            // Clear previous preview
+            document.querySelectorAll('.cell.clipboard-preview').forEach(cell => {
+                cell.classList.remove('clipboard-preview');
+                cell.classList.remove('dragging');
+            });
+            pastePreviewCells = [];
+
+            if (!clipboard) return;
+
+            const cells = Array.from(gridContainer.children);
+            for (let r = 0; r < clipboard.rows; r++) {
+                for (let c = 0; c < clipboard.cols; c++) {
+                    const targetRow = pasteOffset.row + r;
+                    const targetCol = pasteOffset.col + c;
+
+                    if (targetRow >= 0 && targetRow < R_current && targetCol >= 0 && targetCol < C_current) {
+                        const index = targetRow * C_current + targetCol;
+                        if (index < cells.length) {
+                            cells[index].classList.add('clipboard-preview');
+                            // Maintain dragging class if currently dragging
+                            if (isDraggingPaste) {
+                                cells[index].classList.add('dragging');
+                            }
+                            pastePreviewCells.push(index);
+                        }
+                    }
+                }
+            }
+        }
+
+        /**
+         * Applies the paste operation.
+         */
+        function applyPaste() {
+            if (!clipboard) return;
+
+            // Save state for undo
+            pushToUndoHistory(captureGridState());
+
+            const cells = Array.from(gridContainer.children);
+            for (let r = 0; r < clipboard.rows; r++) {
+                for (let c = 0; c < clipboard.cols; c++) {
+                    const targetRow = pasteOffset.row + r;
+                    const targetCol = pasteOffset.col + c;
+
+                    if (targetRow >= 0 && targetRow < R_current && targetCol >= 0 && targetCol < C_current) {
+                        const index = targetRow * C_current + targetCol;
+                        const colorSlot = clipboard.data[r][c];
+
+                        if (colorSlot) {
+                            cells[index].setAttribute('data-color-slot', colorSlot);
+                        } else {
+                            cells[index].removeAttribute('data-color-slot');
+                        }
+                    }
+                }
+            }
+
+            // Clear paste mode
+            isPasteMode = false;
+            document.querySelectorAll('.cell.clipboard-preview').forEach(cell => {
+                cell.classList.remove('clipboard-preview');
+            });
+            pastePreviewCells = [];
+        }
+
+
+        /* ----------------------------------
+         * 5. Undo Functionality
+         * ---------------------------------- */
+        /**
+         * Pushes a state to the undo history stack.
+         * @param {Object} state - The grid state to save.
+         */
+        function pushToUndoHistory(state) {
+            undoHistory.push(state);
+
+            // Clear redo history when a new action is performed
+            redoHistory = [];
+
+            // Limit history size to prevent memory issues
+            if (undoHistory.length > MAX_UNDO_HISTORY) {
+                undoHistory.shift(); // Remove oldest state
+            }
+
+            updateUndoRedoButtons();
+        }
+
+        /**
+         * Restores the grid to a given state.
+         * @param {Object} state - The grid state to restore.
+         */
+        function restoreGridState(state) {
+            // Update grid dimensions if needed
+            if (state.rows !== R_current || state.cols !== C_current) {
+                rowSizeInput.value = state.rows;
+                colSizeInput.value = state.cols;
+                R_current = state.rows;
+                C_current = state.cols;
+
+                document.documentElement.style.setProperty('--grid-rows', state.rows);
+                document.documentElement.style.setProperty('--grid-cols', state.cols);
+
+                // Regenerate grid with new dimensions
+                gridContainer.innerHTML = '';
+                for (let i = 0; i < state.rows * state.cols; i++) {
+                    const cell = document.createElement('div');
+                    cell.classList.add('cell');
+                    gridContainer.appendChild(cell);
+                }
+            }
+
+            // Restore cell colors
+            const cells = Array.from(gridContainer.children);
+            state.cellData.forEach((colorSlot, index) => {
+                if (index < cells.length) {
+                    if (colorSlot) {
+                        cells[index].setAttribute('data-color-slot', colorSlot);
+                    } else {
+                        cells[index].removeAttribute('data-color-slot');
+                    }
+                }
+            });
+        }
+
+        /**
+         * Updates the undo and redo buttons' enabled/disabled state.
+         */
+        function updateUndoRedoButtons() {
+            const undoButton = document.getElementById('undo-button');
+            const redoButton = document.getElementById('redo-button');
+            undoButton.disabled = undoHistory.length === 0;
+            redoButton.disabled = redoHistory.length === 0;
+        }
+
+        /**
+         * Undoes the last drawing operation.
+         */
+        function undo() {
+            if (undoHistory.length === 0) return;
+
+            // Save current state to redo history
+            const currentState = captureGridState();
+            redoHistory.push(currentState);
+
+            // Restore previous state
+            const previousState = undoHistory.pop();
+            restoreGridState(previousState);
+            updateUndoRedoButtons();
+        }
+
+        /**
+         * Redoes the last undone operation.
+         */
+        function redo() {
+            if (redoHistory.length === 0) return;
+
+            // Save current state to undo history
+            const currentState = captureGridState();
+            undoHistory.push(currentState);
+
+            // Restore next state
+            const nextState = redoHistory.pop();
+            restoreGridState(nextState);
+            updateUndoRedoButtons();
+        }
+
+
+        /**
+         * Copies the content of the output textarea to the clipboard.
+         */
+        function copyToClipboard() {
+            const output = document.getElementById('slack-message-output');
+            output.select();
+            output.setSelectionRange(0, 99999);
+
+            try {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(output.value).then(() => {
+                        alert('Slack message copied to clipboard!');
+                    });
+                } else {
+                    document.execCommand('copy');
+                    alert('Failed to copy. Please manually select and copy the text.');
+                }
+            } catch (err) {
+                console.error('Could not copy text: ', err);
+                alert('Failed to copy. Please manually select and copy the text.');
+            }
+        }
+    </script>
 
 </body>
+
 </html>
