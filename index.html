@@ -726,7 +726,7 @@
             // Click handler for emoji selection
             emojiList.querySelectorAll("img, .emoji-text-item").forEach(item => {
                 item.onclick = () => {
-                    currentTargetInput.value = item.dataset.code;
+                    currentTargetInput.value = `:${item.dataset.code}:`;
                     document.getElementById("emoji-picker").style.display = "none";
                 };
             });
