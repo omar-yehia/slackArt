@@ -29,6 +29,37 @@
             /* Orange */
             --color-8: #000000;
             /* Black */
+
+            /* Light mode colors */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f8f8;
+            --text-primary: #2c2d2f;
+            --text-secondary: #666;
+            --border-color: #ddd;
+            --container-bg: #ffffff;
+            --container-border: #ddd;
+            --input-bg: #fff;
+            --input-border: #ccc;
+            --button-bg: #4A154B;
+            --button-text: #fff;
+            --button-hover: #611f69;
+        }
+
+        body.dark-mode {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --border-color: #444;
+            --container-bg: #252525;
+            --container-border: #444;
+            --input-bg: #333;
+            --input-border: #555;
+            --button-bg: #611f69;
+            --button-text: #fff;
+            --button-hover: #7a2a82;
+            --empty-color: #333;
+            --grid-border-color: #555;
         }
 
         /* ... other CSS ... */
@@ -76,22 +107,29 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             padding: 20px;
-            background-color: #ffffff;
-            color: #2c2d2f;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .container {
             max-width: 1000px;
             margin: 0 auto;
-            border: 1px solid #ddd;
+            border: 1px solid var(--container-border);
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            background-color: var(--container-bg);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
         h1 {
             color: #4A154B;
             text-align: center;
+        }
+
+        body.dark-mode h1 {
+            color: #9d5ba8;
         }
 
         /* --- Controls --- */
@@ -127,16 +165,20 @@
             font-weight: bold;
             margin-bottom: 5px;
             font-size: 0.9em;
+            color: var(--text-primary);
         }
 
         input[type="text"],
         input[type="number"] {
             padding: 8px;
-            border: 1px solid #ccc;
+            border: 1px solid var(--input-border);
             border-radius: 4px;
             font-size: 1em;
             width: 100px;
             text-align: center;
+            background-color: var(--input-bg);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
         }
 
         .size-inputs input[type="number"] {
@@ -194,6 +236,37 @@
         .tool-button.select-mode {
             border-color: #4A154B;
             background-color: #f0e6f7;
+        }
+
+        body.dark-mode .tool-button {
+            background-color: #3a3a3a;
+            color: #e0e0e0;
+            border-color: #555;
+        }
+
+        body.dark-mode .tool-button.active {
+            background-color: #2a4a3a;
+        }
+
+        body.dark-mode .tool-button.select-mode {
+            background-color: #3a2a4a;
+        }
+
+        body.dark-mode #emoji-picker {
+            background-color: #2d2d2d;
+            border-color: #555;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode #emoji-search {
+            background-color: #3a3a3a;
+            border-color: #555;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode #selection-controls {
+            background-color: #3a2a4a;
+            border-color: #611f69;
         }
 
 
@@ -310,6 +383,31 @@
             cursor: nwse-resize;
         }
 
+        /* --- Dark Mode Toggle --- */
+        #dark-mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 15px;
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1.2em;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        #dark-mode-toggle:hover {
+            background-color: var(--button-hover);
+            transform: scale(1.05);
+        }
+
         /* --- Output --- */
         #output-area {
             margin-top: 20px;
@@ -319,11 +417,14 @@
             width: 100%;
             min-height: 150px;
             padding: 10px;
-            border: 1px solid #ccc;
+            border: 1px solid var(--input-border);
             border-radius: 4px;
             font-family: monospace;
             white-space: pre;
             box-sizing: border-box;
+            background-color: var(--input-bg);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
         }
 
         .copy-button {
@@ -385,6 +486,11 @@
 </head>
 
 <body>
+
+    <button id="dark-mode-toggle" onclick="toggleDarkMode()" title="Toggle Dark Mode">
+        <span id="dark-mode-icon">🌙</span>
+        <span id="dark-mode-text">Dark</span>
+    </button>
 
     <div class="container-fluid">
         <h1>🎨 Ultimate Slack Emoji Art Generator</h1>
@@ -624,6 +730,35 @@
                     document.getElementById("emoji-picker").style.display = "none";
                 };
             });
+        }
+
+        /* ----------------------------------
+         * Dark Mode Toggle
+         * ---------------------------------- */
+
+        function toggleDarkMode() {
+            const body = document.body;
+            const icon = document.getElementById('dark-mode-icon');
+            const text = document.getElementById('dark-mode-text');
+
+            body.classList.toggle('dark-mode');
+
+            if (body.classList.contains('dark-mode')) {
+                icon.textContent = '🌙';
+                text.textContent = 'Dark';
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                icon.textContent = '☀️';
+                text.textContent = 'Light';
+                localStorage.setItem('darkMode', 'disabled');
+            }
+        }
+
+        // Check for saved dark mode preference on page load
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.body.classList.add('dark-mode');
+            document.getElementById('dark-mode-icon').textContent = '🌙';
+            document.getElementById('dark-mode-text').textContent = 'Dark';
         }
 
         // Search functionality
