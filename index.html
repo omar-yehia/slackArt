@@ -29,6 +29,8 @@
             /* Orange */
             --color-8: #000000;
             /* Black */
+            --color-9: #ffffff;
+            /* White */
 
             /* Light mode colors */
             --bg-primary: #ffffff;
@@ -102,6 +104,10 @@
 
         .swatch-8 {
             background-color: var(--color-8);
+        }
+
+        .swatch-9 {
+            background-color: var(--color-9);
         }
 
         body {
@@ -332,6 +338,10 @@
             background-color: var(--color-8);
         }
 
+        .cell[data-color-slot="9"] {
+            background-color: var(--color-9);
+        }
+
         /* Selection Mode Styles */
         .cell.selected {
             outline: 2px solid #4A154B;
@@ -549,6 +559,10 @@
                         <input type="text" id="filled-emoji-8" value=":black_square:" placeholder=":emoji_8: (Black)">
                     </div>
                     <div class="emoji-input-row">
+                        <span class="swatch swatch-9"></span>
+                        <input type="text" id="filled-emoji-9" value=":white_square:" placeholder=":emoji_9: (White)">
+                    </div>
+                    <div class="emoji-input-row">
                         <label style="margin: 0; font-weight: normal; min-width: 50px;">Empty:</label>
                         <input type="text" id="empty-emoji" value=":empty:" placeholder=":blank_emoji:">
                     </div>
@@ -580,6 +594,9 @@
                 </button>
                 <button class="tool-button" data-tool="8">
                     <span class="swatch swatch-8"></span> Pen 8 (Black)
+                </button>
+                <button class="tool-button" data-tool="9">
+                    <span class="swatch swatch-9"></span> Pen 9 (White)
                 </button>
                 <button class="tool-button" id="select-mode-button" data-tool="select">
                     📦 Select Mode
@@ -668,7 +685,7 @@
             console.log(`Loaded ${ALL_EMOJIS.length} total emojis (${imageEmojis.length} with images, ${ALL_EMOJIS.length - imageEmojis.length} text-only)`);
         });
 
-        document.querySelectorAll('#filled-emoji-1, #filled-emoji-2, #filled-emoji-3, #filled-emoji-4, #filled-emoji-5, #filled-emoji-6, #filled-emoji-7, #filled-emoji-8, #empty-emoji')
+        document.querySelectorAll('#filled-emoji-1, #filled-emoji-2, #filled-emoji-3, #filled-emoji-4, #filled-emoji-5, #filled-emoji-6, #filled-emoji-7, #filled-emoji-8,#filled-emoji-9, #empty-emoji')
             .forEach(input => {
                 input.addEventListener('click', (e) => openEmojiPicker(e.target));
             });
@@ -1223,7 +1240,7 @@
         function convertToSlack() {
             // Map the data-color-slot attribute to the actual emoji code input
             const emojiMap = {};
-            for (let i = 1; i <= 8; i++) {
+            for (let i = 1; i <= 9; i++) {
                 emojiMap[String(i)] = document.getElementById(`filled-emoji-${i}`).value.trim();
             }
 
